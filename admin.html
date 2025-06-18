@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Indorama Club</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>Indorama Club</h1>
+                <p>Admin Dashboard</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html" class="active">Overview</a></li>
+                    <li><a href="#" id="adminLogoutBtn">Logout</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-dashboard">
+        <div class="container">
+            <h2>Admin Dashboard</h2>
+            
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <h3>Total Members</h3>
+                    <p id="totalMembers">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Today's Bookings</h3>
+                    <p id="todayBookings">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Monthly Revenue</h3>
+                    <p id="monthlyRevenue">₹0</p>
+                </div>
+            </div>
+            
+            <div class="admin-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="bookings">Bookings</button>
+                    <button class="tab-btn" data-tab="members">Members</button>
+                    <button class="tab-btn" data-tab="payments">Payments</button>
+                </div>
+                
+                <div class="tab-content active" id="bookingsTab">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="bookingDateFilter">Date:</label>
+                            <input type="date" id="bookingDateFilter">
+                        </div>
+                        <button class="btn btn-primary" id="filterBookingsBtn">Filter</button>
+                        <button class="btn btn-secondary" id="resetBookingsFilterBtn">Reset</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Duration</th>
+                                <th>Partner</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTable">
+                            <tr>
+                                <td colspan="8">No bookings found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="tab-content" id="membersTab">
+                    <div class="search-bar">
+                        <input type="text" id="memberSearch" placeholder="Search members...">
+                        <button class="btn btn-primary" id="searchMemberBtn">Search</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Join Date</th>
+                                <th>Balance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTable">
+                            <tr>
+                                <td colspan="7">No members found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="tab-content" id="paymentsTab">
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="paymentMonthFilter">Month:</label>
+                            <select id="paymentMonthFilter">
+                                <option value="all">All Months</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="filterPaymentsBtn">Filter</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member</th>
+                                <th>Month</th>
+                                <th>Total Hours</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTable">
+                            <tr>
+                                <td colspan="7">No payments found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Indorama Club. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
