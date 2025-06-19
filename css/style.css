@@ -782,3 +782,84 @@ footer {
     padding: 5px 10px;
     font-size: 0.8rem;
 }
+
+
+/* Add to your style.css */
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.time-slot {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+.time-slot:hover {
+    background: #3498db;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.time-slot.booked {
+    background: #e74c3c;
+    color: white;
+    cursor: not-allowed;
+}
+
+.time-slot.selected {
+    background: #2ecc71;
+    color: white;
+    transform: scale(1.05);
+}
+
+.time-slot[data-tooltip] {
+    position: relative;
+}
+
+.time-slot[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 10;
+    margin-bottom: 5px;
+}
+
+.time-slot[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% - 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #2c3e50 transparent transparent transparent;
+}
+
+.closed-hours {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-style: italic;
+    color: #7f8c8d;
+    border: 1px dashed #ddd;
+}

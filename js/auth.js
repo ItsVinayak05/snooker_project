@@ -1,145 +1,120 @@
-// auth.js - Complete Authentication System
-const Auth = {
-    // Initialize authentication system
-    init: function() {
-        this.checkAuthState();
-        this.setupEventListeners();
-    },
+// Authentication functions
 
-    // Check if user is logged in
-    checkAuthState: function() {
-        const protectedPages = ['dashboard.html', 'booking.html', 'admin.html'];
-        const currentPage = window.location.pathname.split('/').pop();
-        
-        if (protectedPages.includes(currentPage)) {
-            const user = this.getCurrentUser();
-            if (!user) {
-                window.location.href = 'login.html';
+// Check if user is logged in
+function checkAuth() {
+    if (window.location.pathname.includes('admin.html')) {
+        if (!getCurrentAdmin()) {
+            window.location.href = 'login.html';
+        }
+    } else if (window.location.pathname.includes('dashboard.html') || 
+               window.location.pathname.includes('booking.html')) {
+        if (!getCurrentUser()) {
+            window.location.href = 'login.html';
+        }
+    }
+}
+
+// Get current user
+function getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+}
+
+// Get current admin
+function getCurrentAdmin() {
+    const admin = localStorage.getItem('currentAdmin');
+    return admin ? JSON.parse(admin) : null;
+}
+
+// Register new user
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
                 return;
             }
             
-            // Redirect admin away from regular pages
-            if (currentPage !== 'admin.html' && user.isAdmin) {
-                window.location.href = 'admin.html';
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            if (users.some(user => user.email === email)) {
+                alert('Email already registered!');
+                return;
             }
             
-            // Redirect regular users away from admin page
-            if (currentPage === 'admin.html' && !user.isAdmin) {
-                window.location.href = 'dashboard.html';
-            }
-        }
-    },
-
-    // Get current logged in user
-    getCurrentUser: function() {
-        return JSON.parse(localStorage.getItem('currentUser'));
-    },
-
-    // Setup all authentication event listeners
-    setupEventListeners: function() {
-        // Registration form
-        const registerForm = document.getElementById('registerForm');
-        if (registerForm) {
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleRegistration();
-            });
-        }
-
-        // Login form
-        const loginForm = document.getElementById('loginForm');
-        if (loginForm) {
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleLogin();
-            });
-        }
-
-        // Logout buttons
-        document.querySelectorAll('.logout-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleLogout();
-            });
+            const newUser = {
+                id: Date.now().toString(),
+                name: fullName,
+                email,
+                phone,
+                password,
+                joinDate: new Date().toISOString(),
+                balance: 0
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('Registration successful! Please login.');
+            window.location.href = 'login.html';
         });
-    },
-
-    // Handle user registration
-    handleRegistration: function() {
-        const name = document.getElementById('fullName').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        // Validate inputs
-        if (!name || !email || !phone || !password || !confirmPassword) {
-            alert('Please fill all fields!');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        // Check if email already exists
-        const users = DB.getUsers();
-        if (users.some(user => user.email === email)) {
-            alert('Email already registered!');
-            return;
-        }
-
-        // Create new user
-        const newUser = {
-            id: Date.now().toString(),
-            name,
-            email,
-            phone,
-            password,
-            joinDate: new Date().toISOString(),
-            balance: 0,
-            isAdmin: false
-        };
-
-        // Save user
-        DB.addUser(newUser);
-        alert('Registration successful! Please login.');
-        window.location.href = 'login.html';
-    },
-
-    // Handle user login
-    handleLogin: function() {
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-
-        // Find user
-        const user = DB.getUsers().find(u => u.email === email && u.password === password);
-
-        if (!user) {
-            alert('Invalid email or password!');
-            return;
-        }
-
-        // Set current user
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        
-        // Redirect based on role
-        if (user.isAdmin) {
-            window.location.href = 'admin.html';
-        } else {
-            window.location.href = 'dashboard.html';
-        }
-    },
-
-    // Handle logout
-    handleLogout: function() {
-        localStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
     }
-};
-
-// Initialize authentication system when DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-    Auth.init();
+    
+    // Login user
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Check admin login
+            if (email === 'admin@indorama.com' && password === 'admin123') {
+                const admin = {
+                    id: 'admin1',
+                    name: 'Admin',
+                    email: 'admin@indorama.com'
+                };
+                localStorage.setItem('currentAdmin', JSON.stringify(admin));
+                window.location.href = 'admin.html';
+                return;
+            }
+            
+            // Check regular users
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Invalid email or password!');
+            }
+        });
+    }
 });
+
+// Logout user
+function logoutUser() {
+    localStorage.removeItem('currentUser');
+    window.location.href = 'login.html';
+}
+
+// Logout admin
+function logoutAdmin() {
+    localStorage.removeItem('currentAdmin');
+    window.location.href = 'login.html';
+}
+
+// Initialize auth check
+checkAuth();
